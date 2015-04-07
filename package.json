@@ -1,0 +1,22 @@
+{
+  "name": "autour-de-moi",
+  "version": "1.0.0",
+  "description": "Ongoing experiment.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavidBruant/autour-de-moi.git"
+  },
+  "author": "David Bruant <bruant.d@gmail.com> (https://twitter.com/DavidBruant)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DavidBruant/autour-de-moi/issues"
+  },
+  "homepage": "https://github.com/DavidBruant/autour-de-moi",
+  "dependencies": {
+    "gremlin-client": "^0.3.1"
+  }
+}
