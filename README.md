@@ -3,9 +3,14 @@
 Ongoing experiment.
 
 An attempt to not loose memory, to better understand the world around me.
-An excuse to play with graphs, from UI to database.
+play with graphs, from UI to database.
 
 Play along if you dare
+
+## Let's start with the front-end
+
+.
+
 
 ## Things
 
