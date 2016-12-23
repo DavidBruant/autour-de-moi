@@ -1,51 +1,14 @@
 "use strict";
 
-const SVGNS = "http://www.w3.org/2000/svg";
-
-function idGenerator(start = 0) {
-    return function* () {
-        let i = start;
-        while (true) {
-            yield i++;
-        }
-    }
-}
-
-const nodeId = idGenerator();
-const edgeId = idGenerator();
-const NODE_RADIUS = 17;
-
-const WIDTH = 1200;
-const HEIGHT = 600;
-
-const nodes = Array(5).fill().map(_ => ({index: nodeId(), x: WIDTH/2, y: HEIGHT/2}));
-const edges = [
-    {
-        source: 0,
-        target: 1,
-        index: edgeId()
-    },
-    {
-        source: 1,
-        target: 2,
-        index: edgeId()
-    },
-    {
-        source: 2,
-        target: 0,
-        index: edgeId()
-    }
-];
-
 let simulation;
 
 function startForces(){
     if(simulation)
         simulation.stop();
 
-    simulation = d3.forceSimulation(nodes)
+    simulation = d3.forceSimulation(store.graph.nodes)
         .force('charge', d3.forceManyBody().strength(-20) )
-        .force('link', d3.forceLink(edges).distance(40) )
+        .force('link', d3.forceLink(store.graph.edges).distance(40) )
         // centers too violently when adding a node through clicking
         //.force('center', d3.forceCenter(400, 200))
     ;
@@ -82,7 +45,7 @@ const edgeToElement = new WeakMap();
 let selectedNode;
 
 function render(){
-    for(const n of nodes){
+    for(const n of store.graph.nodes){
         let circle = nodeToElement.get(n);
         if(!circle){
             circle = document.createElementNS(SVGNS, "circle");
@@ -97,19 +60,22 @@ function render(){
                 selectedNode = circle;
             });
 
+            circle.addEventListener('click', e => {
+                
+            });
+
             nodeToElement.set(n, circle);
             elementToNode.set(circle, n);
             nodesG.append(circle);
         }
         circle.setAttribute('cx', n.x);
         circle.setAttribute('cy', n.y);
-
         circle.setAttribute('r', NODE_RADIUS);
 
-        
+        circle.setAttribute('fill', n.visual.color);
     }
 
-    for(const e of edges){
+    for(const e of store.graph.edges){
         let line = edgeToElement.get(e);
         if(!line){
             line = document.createElementNS(SVGNS, "line");
@@ -119,8 +85,8 @@ function render(){
             edgesG.append(line);
         }
 
-        const sourceNode = nodes.find(n => (n === e.source));
-        const targetNode = nodes.find(n => (n === e.target));
+        const sourceNode = store.graph.nodes.find(n => (n === e.source));
+        const targetNode = store.graph.nodes.find(n => (n === e.target));
         
         line.setAttribute('x1', sourceNode.x);
         line.setAttribute('y1', sourceNode.y);
@@ -133,15 +99,7 @@ render();
 
 svg.addEventListener('dblclick', e => {
     if(!selectedNode){
-
-        const x = e.offsetX - NODE_RADIUS / 2;
-        const y = e.offsetY - NODE_RADIUS / 2;
-
-        nodes.push({
-            index: nodeId(),
-            x,
-            y
-        })
+        reducers.addNode(e);
 
         startForces();
         render();
@@ -192,18 +150,13 @@ svg.addEventListener('mousedown', e => {
         svg.addEventListener('mousemove', moveWhileDown);
         document.body.addEventListener('mouseup', function l(e){
             if(targetGraphNode && sourceGraphNode !== targetGraphNode){
-                edges.push({
-                    source: sourceGraphNode,
-                    target: targetGraphNode,
-                    index: edgeId()
-                });
+                reducers.addEdge(sourceGraphNode, targetGraphNode);
 
                 render();
                 startForces();
                 targetGraphNode = undefined;
             }
             
-
             svg.removeEventListener('mousemove', moveWhileDown);
             temporaryLine.remove();
             temporaryLine = undefined;
@@ -218,3 +171,7 @@ svg.addEventListener('mousedown', e => {
         }
     }
 });
+
+
+const editPanel = makeEditPanel({name: 'David Bruant'});
+document.body.append(editPanel);

@@ -5,12 +5,17 @@
         <title lang=fr>Autour de moi</title>
         
         <meta name="description" content="Autour de moi">
-        <script src="https://d3js.org/d3-collection.v1.min.js"></script>
-        <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
-        <script src="https://d3js.org/d3-quadtree.v1.min.js"></script>
-        <script src="https://d3js.org/d3-timer.v1.min.js"></script>
-        <script src="https://d3js.org/d3-force.v1.js"></script>
+        <script defer src="https://d3js.org/d3-collection.v1.min.js"></script>
+        <script defer src="https://d3js.org/d3-dispatch.v1.min.js"></script>
+        <script defer src="https://d3js.org/d3-quadtree.v1.min.js"></script>
+        <script defer src="https://d3js.org/d3-timer.v1.min.js"></script>
+        <script defer src="https://d3js.org/d3-force.v1.js"></script>
 
+        <script defer src="client/js/constants.js"></script>
+        <script defer src="client/js/store.js"></script>
+        <script defer src="client/js/reducers.js"></script>
+        
+        <script defer src="client/js/editPanel.js"></script>
         <script defer src="client/js/main.js"></script>
 
         <link rel="stylesheet" href="https://rawgit.com/DavidBruant/better-defaults/master/defaults.css">
@@ -60,11 +65,28 @@
             }
 
 
+            /*
+                Edit panel
+            */
+            .edit-panel{
+                position: fixed;
+                height: 100%;
+                width: 20vw;
+                right: 0;
+                background-color: beige;
+
+                padding: 0.5em;
+            }
+
+            label > input {
+                margin: 0 0.2em;
+            }
+
         </style>
     </head>
 
     <body>
         <h1>Autour de moi</h1>
-        <div class="graph-container" />
+        <div class="graph-container"></div>
     </body>
 </html>
