@@ -49,6 +49,8 @@ function startForces(){
         // centers too violently when adding a node through clicking
         //.force('center', d3.forceCenter(400, 200))
     ;
+
+    simulation.on('tick', render);
 }
 
 startForces();
@@ -69,33 +71,42 @@ edgesG.classList.add('edges');
 svg.append(edgesG, nodesG);
 
 const nodeToElement = new WeakMap();
+const elementToNode = new WeakMap();
 const edgeToElement = new WeakMap();
 
-requestAnimationFrame(function frame(){
+/*requestAnimationFrame(function frame(){
     render();
     requestAnimationFrame(frame);
-});
+});*/
+
+let selectedNode;
 
 function render(){
-    for(const child of nodesG.children){
-        child.remove()
-    }
-    for(const child of edgesG.children){
-        child.remove()
-    }
-
     for(const n of nodes){
         let circle = nodeToElement.get(n);
         if(!circle){
             circle = document.createElementNS(SVGNS, "circle");
+            circle.classList.add('node');
+
+            circle.addEventListener('mousedown', e => {
+                if(selectedNode){
+                    selectedNode.classList.remove('selected');
+                }
+                
+                circle.classList.toggle('selected');
+                selectedNode = circle;
+            });
+
             nodeToElement.set(n, circle);
+            elementToNode.set(circle, n);
+            nodesG.append(circle);
         }
         circle.setAttribute('cx', n.x);
         circle.setAttribute('cy', n.y);
 
         circle.setAttribute('r', NODE_RADIUS);
 
-        nodesG.append(circle);
+        
     }
 
     for(const e of edges){
@@ -104,6 +115,8 @@ function render(){
             line = document.createElementNS(SVGNS, "line");
             line.classList.add('edge');
             edgeToElement.set(e, line);
+            
+            edgesG.append(line);
         }
 
         const sourceNode = nodes.find(n => (n === e.source));
@@ -113,23 +126,95 @@ function render(){
         line.setAttribute('y1', sourceNode.y);
         line.setAttribute('x2', targetNode.x);
         line.setAttribute('y2', targetNode.y);
-
-        edgesG.append(line);
     }
 }
 
 render();
 
 svg.addEventListener('dblclick', e => {
-    const x = e.offsetX - NODE_RADIUS / 2;
-    const y = e.offsetY - NODE_RADIUS / 2;
+    if(!selectedNode){
 
-    nodes.push({
-        index: nodeId(),
-        x,
-        y
-    })
+        const x = e.offsetX - NODE_RADIUS / 2;
+        const y = e.offsetY - NODE_RADIUS / 2;
 
-    startForces();
-    render();
+        nodes.push({
+            index: nodeId(),
+            x,
+            y
+        })
+
+        startForces();
+        render();
+    }
 })
+
+svg.addEventListener('dragstart', e => e.preventDefault());
+
+svg.addEventListener('mousedown', e => {
+    if(e.target.classList.contains('node')){
+        const sourceNodeElement = e.target;
+        const sourceGraphNode = elementToNode.get(sourceNodeElement)
+        let temporaryLine = document.createElementNS(SVGNS, "line");
+        temporaryLine.classList.add('edge');
+        temporaryLine.classList.add('temporary');
+
+        svg.append(temporaryLine);
+
+        let lastMoveEvent;
+        let frame;
+        let targetGraphNode;
+
+        function moveWhileDown(e){
+            if(!lastMoveEvent){
+                frame = requestAnimationFrame(() => {
+                    const svgRect = svg.getBoundingClientRect();
+
+                    targetGraphNode = elementToNode.get(e.target);
+
+                    // snapping
+                    const x2 = targetGraphNode ?
+                        targetGraphNode.x :
+                        lastMoveEvent.pageX - svgRect.left - window.scrollX;
+                    const y2 = targetGraphNode ?
+                        targetGraphNode.y :
+                        lastMoveEvent.pageY - svgRect.top - window.scrollY;
+
+                    temporaryLine.setAttribute('x1', sourceGraphNode.x);
+                    temporaryLine.setAttribute('y1', sourceGraphNode.y);
+                    temporaryLine.setAttribute('x2', x2);
+                    temporaryLine.setAttribute('y2', y2);
+                    lastMoveEvent = undefined;
+                });
+            }
+            lastMoveEvent = e;
+        }
+
+        svg.addEventListener('mousemove', moveWhileDown);
+        document.body.addEventListener('mouseup', function l(e){
+            if(targetGraphNode && sourceGraphNode !== targetGraphNode){
+                edges.push({
+                    source: sourceGraphNode,
+                    target: targetGraphNode,
+                    index: edgeId()
+                });
+
+                render();
+                startForces();
+                targetGraphNode = undefined;
+            }
+            
+
+            svg.removeEventListener('mousemove', moveWhileDown);
+            temporaryLine.remove();
+            temporaryLine = undefined;
+            document.body.removeEventListener('mouseup', l);
+            cancelAnimationFrame(frame);
+        })
+    }
+    else{
+        if(selectedNode){
+            selectedNode.classList.remove('selected');
+            selectedNode = undefined;
+        }
+    }
+});
