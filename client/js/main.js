@@ -120,7 +120,7 @@ function render(){
 
 render();
 
-svg.addEventListener('click', e => {
+svg.addEventListener('dblclick', e => {
     const x = e.offsetX - NODE_RADIUS / 2;
     const y = e.offsetY - NODE_RADIUS / 2;
 
