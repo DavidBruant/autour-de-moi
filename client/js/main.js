@@ -7,8 +7,8 @@ function startForces(){
         simulation.stop();
 
     simulation = d3.forceSimulation(store.graph.nodes)
-        .force('charge', d3.forceManyBody().strength(-20) )
-        .force('link', d3.forceLink(store.graph.edges).distance(40) )
+        .force('charge', d3.forceManyBody().strength(-15) )
+        .force('link', d3.forceLink(store.graph.edges).distance(50) )
         // centers too violently when adding a node through clicking
         //.force('center', d3.forceCenter(400, 200))
     ;
@@ -43,36 +43,21 @@ const edgeToElement = new WeakMap();
 });*/
 
 let selectedNode;
+let editPanel;
 
 function render(){
     for(const n of store.graph.nodes){
-        let circle = nodeToElement.get(n);
-        if(!circle){
-            circle = document.createElementNS(SVGNS, "circle");
-            circle.classList.add('node');
+        let graphElement = nodeToElement.get(n);
+        
+        if(!graphElement){
+            graphElement = makeGraphNode(n);
 
-            circle.addEventListener('mousedown', e => {
-                if(selectedNode){
-                    selectedNode.classList.remove('selected');
-                }
-                
-                circle.classList.toggle('selected');
-                selectedNode = circle;
-            });
-
-            circle.addEventListener('click', e => {
-                
-            });
-
-            nodeToElement.set(n, circle);
-            elementToNode.set(circle, n);
-            nodesG.append(circle);
-        }
-        circle.setAttribute('cx', n.x);
-        circle.setAttribute('cy', n.y);
-        circle.setAttribute('r', NODE_RADIUS);
-
-        circle.setAttribute('fill', n.visual.color);
+            nodeToElement.set(n, graphElement);
+            elementToNode.set(graphElement, n);
+            nodesG.append(graphElement);
+        } 
+        graphElement.setAttribute('transform', 'translate('+n.x+', '+n.y+')');
+        graphElement.querySelector('text').textContent = n.userData.name || '';
     }
 
     for(const e of store.graph.edges){
@@ -109,9 +94,14 @@ svg.addEventListener('dblclick', e => {
 svg.addEventListener('dragstart', e => e.preventDefault());
 
 svg.addEventListener('mousedown', e => {
-    if(e.target.classList.contains('node')){
-        const sourceNodeElement = e.target;
-        const sourceGraphNode = elementToNode.get(sourceNodeElement)
+    if(e.target.matches('.nodes g.node *')){
+        let sourceNodeElement = e.target;
+        while(!sourceNodeElement.matches('g.node')){
+            sourceNodeElement = sourceNodeElement.parentNode;
+        }
+
+        const sourceGraphNode = elementToNode.get(sourceNodeElement);
+
         let temporaryLine = document.createElementNS(SVGNS, "line");
         temporaryLine.classList.add('edge');
         temporaryLine.classList.add('temporary');
@@ -123,11 +113,18 @@ svg.addEventListener('mousedown', e => {
         let targetGraphNode;
 
         function moveWhileDown(e){
+            e.preventDefault();
+
             if(!lastMoveEvent){
                 frame = requestAnimationFrame(() => {
                     const svgRect = svg.getBoundingClientRect();
 
-                    targetGraphNode = elementToNode.get(e.target);
+                    let targetNodeElement = e.target;
+                    while(targetNodeElement && targetNodeElement.matches && !targetNodeElement.matches('g.node')){
+                        targetNodeElement = targetNodeElement.parentNode;
+                    }
+
+                    targetGraphNode = elementToNode.get(targetNodeElement);
 
                     // snapping
                     const x2 = targetGraphNode ?
@@ -169,9 +166,12 @@ svg.addEventListener('mousedown', e => {
             selectedNode.classList.remove('selected');
             selectedNode = undefined;
         }
+
+        if(editPanel){
+            editPanel.remove();
+            editPanel = undefined;
+        }
     }
 });
 
 
-const editPanel = makeEditPanel({name: 'David Bruant'});
-document.body.append(editPanel);

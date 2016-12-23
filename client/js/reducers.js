@@ -12,8 +12,15 @@ const reducers = {
             y,
             visual: {
                 color: '#CCC'
-            }
+            },
+            userData: {}
         });
+    },
+
+    editNode(id, key, value){
+        const node = store.graph.nodes.find(n => id === n.index);
+        node.userData[key] = value;
+        render();
     },
 
     addEdge(source, target){

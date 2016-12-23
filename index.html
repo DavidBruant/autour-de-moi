@@ -14,8 +14,9 @@
         <script defer src="client/js/constants.js"></script>
         <script defer src="client/js/store.js"></script>
         <script defer src="client/js/reducers.js"></script>
-        
-        <script defer src="client/js/editPanel.js"></script>
+
+        <script defer src="client/js/components/editPanel.js"></script>
+        <script defer src="client/js/components/graphNode.js"></script>
         <script defer src="client/js/main.js"></script>
 
         <link rel="stylesheet" href="https://rawgit.com/DavidBruant/better-defaults/master/defaults.css">
@@ -54,7 +55,7 @@
 
             .node{}
 
-            .node.selected{
+            .node.selected circle{
                 stroke: gold;
                 stroke-width: 2;
             }

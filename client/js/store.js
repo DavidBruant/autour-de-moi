@@ -18,9 +18,7 @@ const store = {
             index: nodeId(),
             x: WIDTH/2,
             y: HEIGHT/2,
-            userData: {
-
-            },
+            userData: {},
             visual: {
                 color: '#CCC'
             }
