@@ -96,55 +96,58 @@ svg.addEventListener('dblclick', e => {
 svg.addEventListener('dragstart', e => e.preventDefault());
 
 svg.addEventListener('mousedown', e => {
+    let sourceGraphNode;
+    let lastMoveEvent;
+    let frame;
+    let targetGraphNode;
+
+    let temporaryLine = document.createElementNS(SVGNS, "line");
+    temporaryLine.classList.add('edge');
+    temporaryLine.classList.add('temporary');
+
+    function moveWhileDown(e){
+        e.preventDefault();
+
+        if(!lastMoveEvent){
+            frame = requestAnimationFrame(() => {
+                const svgRect = svg.getBoundingClientRect();
+
+                let targetNodeElement = e.target;
+                while(targetNodeElement && targetNodeElement.matches && !targetNodeElement.matches('g.node')){
+                    targetNodeElement = targetNodeElement.parentNode;
+                }
+
+                targetGraphNode = elementToNode.get(targetNodeElement);
+
+                // snapping
+                const x2 = targetGraphNode ?
+                    targetGraphNode.x :
+                    lastMoveEvent.pageX - svgRect.left - window.scrollX;
+                const y2 = targetGraphNode ?
+                    targetGraphNode.y :
+                    lastMoveEvent.pageY - svgRect.top - window.scrollY;
+
+                temporaryLine.setAttribute('x1', sourceGraphNode.x);
+                temporaryLine.setAttribute('y1', sourceGraphNode.y);
+                temporaryLine.setAttribute('x2', x2);
+                temporaryLine.setAttribute('y2', y2);
+                lastMoveEvent = undefined;
+            });
+        }
+        lastMoveEvent = e;
+    }
+
     if(e.target.matches('.nodes g.node *')){
         let sourceNodeElement = e.target;
         while(!sourceNodeElement.matches('g.node')){
             sourceNodeElement = sourceNodeElement.parentNode;
         }
 
-        const sourceGraphNode = elementToNode.get(sourceNodeElement);
+        sourceGraphNode = elementToNode.get(sourceNodeElement);
 
-        let temporaryLine = document.createElementNS(SVGNS, "line");
-        temporaryLine.classList.add('edge');
-        temporaryLine.classList.add('temporary');
+        
 
         svg.append(temporaryLine);
-
-        let lastMoveEvent;
-        let frame;
-        let targetGraphNode;
-
-        function moveWhileDown(e){
-            e.preventDefault();
-
-            if(!lastMoveEvent){
-                frame = requestAnimationFrame(() => {
-                    const svgRect = svg.getBoundingClientRect();
-
-                    let targetNodeElement = e.target;
-                    while(targetNodeElement && targetNodeElement.matches && !targetNodeElement.matches('g.node')){
-                        targetNodeElement = targetNodeElement.parentNode;
-                    }
-
-                    targetGraphNode = elementToNode.get(targetNodeElement);
-
-                    // snapping
-                    const x2 = targetGraphNode ?
-                        targetGraphNode.x :
-                        lastMoveEvent.pageX - svgRect.left - window.scrollX;
-                    const y2 = targetGraphNode ?
-                        targetGraphNode.y :
-                        lastMoveEvent.pageY - svgRect.top - window.scrollY;
-
-                    temporaryLine.setAttribute('x1', sourceGraphNode.x);
-                    temporaryLine.setAttribute('y1', sourceGraphNode.y);
-                    temporaryLine.setAttribute('x2', x2);
-                    temporaryLine.setAttribute('y2', y2);
-                    lastMoveEvent = undefined;
-                });
-            }
-            lastMoveEvent = e;
-        }
 
         svg.addEventListener('mousemove', moveWhileDown);
         document.body.addEventListener('mouseup', function l(e){
