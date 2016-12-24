@@ -58,6 +58,7 @@ function render(){
         } 
         graphElement.setAttribute('transform', 'translate('+n.x+', '+n.y+')');
         graphElement.querySelector('text').textContent = n.userData.name || '';
+        graphElement.querySelector('circle').setAttribute('fill', n.visual.color);
     }
 
     for(const e of store.graph.edges){
@@ -83,6 +84,7 @@ function render(){
 render();
 
 svg.addEventListener('dblclick', e => {
+    e.preventDefault();
     if(!selectedNode){
         reducers.addNode(e);
 

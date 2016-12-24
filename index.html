@@ -5,11 +5,15 @@
         <title lang=fr>Autour de moi</title>
         
         <meta name="description" content="Autour de moi">
+
         <script defer src="https://d3js.org/d3-collection.v1.min.js"></script>
         <script defer src="https://d3js.org/d3-dispatch.v1.min.js"></script>
         <script defer src="https://d3js.org/d3-quadtree.v1.min.js"></script>
         <script defer src="https://d3js.org/d3-timer.v1.min.js"></script>
         <script defer src="https://d3js.org/d3-force.v1.js"></script>
+        <script defer src="https://d3js.org/d3-color.v1.min.js"></script>
+        <script defer src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+        <script defer src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
         <script defer src="client/js/constants.js"></script>
         <script defer src="client/js/store.js"></script>
@@ -41,7 +45,7 @@
             }
 
             svg{
-                background-color: indianred;
+                background-color: lightsalmon;
             }
 
             .graph-container{
@@ -72,7 +76,7 @@
             .edit-panel{
                 position: fixed;
                 height: 100%;
-                width: 20vw;
+                width: 23vw;
                 right: 0;
                 background-color: beige;
 
@@ -81,6 +85,25 @@
 
             label > input {
                 margin: 0 0.2em;
+            }
+
+            /*
+                Color picker
+            */
+
+            .color-picker{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                margin: 0.5em 0;
+
+                height: 2em;
+            }
+
+            .color-picker > *{
+                height: 100%;
+                width: 2em;
             }
 
         </style>

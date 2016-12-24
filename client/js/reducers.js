@@ -11,7 +11,7 @@ const reducers = {
             x,
             y,
             visual: {
-                color: '#CCC'
+                color: NODE_COLORS[0]
             },
             userData: {}
         });
@@ -20,6 +20,12 @@ const reducers = {
     editNode(id, key, value){
         const node = store.graph.nodes.find(n => id === n.index);
         node.userData[key] = value;
+        render();
+    },
+
+    changeNodeColor(id, color){
+        const node = store.graph.nodes.find(n => id === n.index);
+        node.visual.color = color;
         render();
     },
 

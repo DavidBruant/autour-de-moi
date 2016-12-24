@@ -20,6 +20,35 @@
         return labelElement;
     }
 
+    function makeColorPicker(selectedColor, onColorChange){
+        const container = document.createElement('div');
+        container.classList.add('color-picker');
+
+        let selectedColorElement;
+
+        NODE_COLORS.forEach(c => {
+            const color = document.createElement('div');
+            color.style.backgroundColor = c;
+            if(c === selectedColor){
+                color.classList.add('selected');
+                selectedColorElement = color;
+            }
+
+            color.addEventListener('click', e => {
+                if(selectedColorElement !== color){
+                    selectedColorElement.classList.remove('selected');
+                    color.classList.add('selected');
+                    selectedColorElement = color;
+                    onColorChange(c);
+                }
+            })
+
+            container.append(color);  
+        })
+
+        return container;
+    }
+
 
     window.makeEditPanel = n => {
         const container = document.createElement('div');
@@ -31,9 +60,14 @@
             reducers.editNode(n.index, 'name', e.target.value)
         });
 
+        const colorPicker = makeColorPicker(n.visual.color, c => {
+            reducers.changeNodeColor(n.index, c);
+        });
+
         container.append(
-            nameInput
-        )
+            nameInput,
+            colorPicker
+        );
 
         return container;
     }

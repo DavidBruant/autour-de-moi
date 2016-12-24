@@ -14,16 +14,16 @@ const edgeId = idGenerator();
 
 const store = {
     graph: {
-        nodes: Array(5).fill().map(_ => ({
+        nodes: Array(1).fill().map(_ => ({
             index: nodeId(),
             x: WIDTH/2,
             y: HEIGHT/2,
             userData: {},
             visual: {
-                color: '#CCC'
+                color: NODE_COLORS[0]
             }
         })),
-        edges: [
+        edges: [/*
             {
                 source: 0,
                 target: 1,
@@ -38,7 +38,7 @@ const store = {
                 source: 2,
                 target: 0,
                 index: edgeId()
-            }
+            }*/
         ]
     }
 };
