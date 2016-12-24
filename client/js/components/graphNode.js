@@ -5,7 +5,8 @@
         const group = document.createElementNS(SVGNS, "g");
         group.classList.add('node');
 
-        group.addEventListener('mousedown', e => {  
+        group.addEventListener('mousedown', e => {
+            e.preventDefault();
             if(selectedNode){
                 selectedNode.classList.remove('selected');
             }

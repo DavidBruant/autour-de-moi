@@ -6,7 +6,7 @@
 
     function createInput(label, key, value, onChange){
         const labelElement = document.createElement('label');
-        const input = document.createElement('input');
+        const input = document.createElement(key === 'other' ? 'textarea': 'input');
         input.addEventListener('input', onChange);
         if(value){
             input.value = value;
@@ -64,9 +64,14 @@
             reducers.changeNodeColor(n.index, c);
         });
 
+        const otherInput = createInput('autre', 'other', n.userData.other, e => {
+            reducers.editNode(n.index, 'other', e.target.value)
+        });
+
         container.append(
             nameInput,
-            colorPicker
+            colorPicker,
+            otherInput
         );
 
         return container;

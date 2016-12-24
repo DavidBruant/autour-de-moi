@@ -23,22 +23,6 @@ const store = {
                 color: NODE_COLORS[0]
             }
         })),
-        edges: [/*
-            {
-                source: 0,
-                target: 1,
-                index: edgeId()
-            },
-            {
-                source: 1,
-                target: 2,
-                index: edgeId()
-            },
-            {
-                source: 2,
-                target: 0,
-                index: edgeId()
-            }*/
-        ]
+        edges: []
     }
 };
