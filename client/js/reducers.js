@@ -15,18 +15,22 @@ const reducers = {
             },
             userData: {}
         });
+
+        rememberGraph(store.graph);
     },
 
     editNode(id, key, value){
         const node = store.graph.nodes.find(n => id === n.index);
         node.userData[key] = value;
         render();
+        rememberGraph(store.graph);
     },
 
     changeNodeColor(id, color){
         const node = store.graph.nodes.find(n => id === n.index);
         node.visual.color = color;
         render();
+        rememberGraph(store.graph);
     },
 
     addEdge(source, target){
@@ -35,6 +39,8 @@ const reducers = {
             target: target,
             index: edgeId()
         });
+
+        rememberGraph(store.graph);
     }
 
 

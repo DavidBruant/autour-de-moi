@@ -9,20 +9,28 @@ function idGenerator(start = 0) {
     }
 }
 
-const nodeId = idGenerator();
-const edgeId = idGenerator();
+let nodeId = idGenerator();
+let edgeId = idGenerator();
 
-const store = {
+let store = {
     graph: {
-        nodes: Array(1).fill().map(_ => ({
-            index: nodeId(),
-            x: WIDTH/2,
-            y: HEIGHT/2,
-            userData: {},
-            visual: {
-                color: NODE_COLORS[0]
-            }
-        })),
+        nodes: [],
         edges: []
     }
 };
+
+remember('autour-de-moi-graph')
+.then(s => {
+    if(s){
+        store.graph = s;
+        nodeId = idGenerator(Math.max(...store.graph.nodes.map(n => n.index)) + 1);
+        edgeId = idGenerator(Math.max(...store.graph.edges.map(n => n.index)) + 1);
+
+        startForces();
+        render();
+    }
+});
+
+
+
+
