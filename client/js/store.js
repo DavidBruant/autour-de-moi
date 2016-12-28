@@ -1,36 +1,23 @@
-"use strict";
+import remember from './remember.js' 
 
-function idGenerator(start = 0) {
-    return function* () {
-        let i = start;
-        while (true) {
-            yield i++;
-        }
-    }
+let graph = {
+    nodes: [],
+    edges: []
 }
 
-let nodeId = idGenerator();
-let edgeId = idGenerator();
-
-let store = {
-    graph: {
-        nodes: [],
-        edges: []
-    }
-};
-
 remember('autour-de-moi-graph')
-.then(s => {
-    if(s){
-        store.graph = s;
+.then(g => {
+    if(g){
+        graph = g;
         nodeId = idGenerator(Math.max(...store.graph.nodes.map(n => n.index)) + 1);
         edgeId = idGenerator(Math.max(...store.graph.edges.map(n => n.index)) + 1);
 
-        startForces();
         render();
     }
 });
 
 
-
+export default {
+    get graph(){ return graph }
+};
 

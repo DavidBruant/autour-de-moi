@@ -1,22 +1,10 @@
-"use strict";
+import spatialisation from './spatialisation.js';
+import store from './store.js';
+import {SVGNS, HEIGHT, WIDTH} from './constants.js';
+import makeGraphNode from './components/graphNode.js';
+import reducers from './reducers.js';
 
-let simulation;
-
-function startForces(){
-    if(simulation)
-        simulation.stop();
-
-    simulation = d3.forceSimulation(store.graph.nodes)
-        .force('charge', d3.forceManyBody().strength(-15) )
-        .force('link', d3.forceLink(store.graph.edges).distance(50) )
-        // centers too violently when adding a node through clicking
-        //.force('center', d3.forceCenter(400, 200))
-    ;
-
-    simulation.on('tick', render);
-}
-
-startForces();
+spatialisation.graph = store.graph;
 
 const container = document.querySelector('.graph-container');
 
@@ -26,12 +14,16 @@ svg.setAttribute('width', WIDTH);
 
 container.append(svg);
 
+const panzoomContainer = document.createElementNS(SVGNS, "g");
+svg.append(panzoomContainer);
+
 let nodesG = document.createElementNS(SVGNS, "g");
 nodesG.classList.add('nodes');
 let edgesG = document.createElementNS(SVGNS, "g");
 edgesG.classList.add('edges');
 
-svg.append(edgesG, nodesG);
+panzoomContainer.append(edgesG, nodesG);
+
 
 const nodeToElement = new WeakMap();
 const elementToNode = new WeakMap();
@@ -88,7 +80,7 @@ svg.addEventListener('dblclick', e => {
     if(!selectedNode){
         reducers.addNode(e);
 
-        startForces();
+        spatialisation.graph = store.graph;
         render();
     }
 })
@@ -145,17 +137,15 @@ svg.addEventListener('mousedown', e => {
 
         sourceGraphNode = elementToNode.get(sourceNodeElement);
 
-        
-
         svg.append(temporaryLine);
 
         svg.addEventListener('mousemove', moveWhileDown);
-        document.body.addEventListener('mouseup', function l(e){
+        document.body.addEventListener('mouseup', function l(){
             if(targetGraphNode && sourceGraphNode !== targetGraphNode){
                 reducers.addEdge(sourceGraphNode, targetGraphNode);
 
                 render();
-                startForces();
+                spatialisation.graph = store.graph;
                 targetGraphNode = undefined;
             }
             

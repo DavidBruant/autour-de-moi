@@ -1,6 +1,20 @@
-"use strict";
+import {NODE_RADIUS, NODE_COLORS} from './constants.js';
+import store from './store.js';
+import rememberGraph from './rememberGraph.js';
 
-const reducers = {
+function idGenerator(start = 0) {
+    return function* () {
+        let i = start;
+        while (true) {
+            yield i++;
+        }
+    }
+}
+
+let nodeId = idGenerator();
+let edgeId = idGenerator();
+
+export default {
 
     addNode(e){
         const x = e.offsetX - NODE_RADIUS / 2;

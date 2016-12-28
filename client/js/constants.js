@@ -1,10 +1,10 @@
-"use strict";
+import d3 from 'd3-color';
 
-const NODE_RADIUS = 17;
+export const NODE_RADIUS = 17;
 
-const WIDTH = 1200;
-const HEIGHT = 600;
+export const WIDTH = 1200;
+export const HEIGHT = 600;
 
-const SVGNS = "http://www.w3.org/2000/svg";
+export const SVGNS = "http://www.w3.org/2000/svg";
 
-const NODE_COLORS = d3.schemeSet1;
+export const NODE_COLORS = d3.schemeSet1;

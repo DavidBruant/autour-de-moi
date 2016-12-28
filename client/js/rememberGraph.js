@@ -1,6 +1,6 @@
-"use strict";
+import remember from './remember.js'
 
-function rememberGraph(graph){
+export default function rememberGraph(graph){
     const copy = {
         nodes: graph.nodes.map(n => ({
             index: n.index,

@@ -1,0 +1,6 @@
+- [ ] ES6/moduleify
+- [ ] ESLint on pre-commit
+- [ ] reduxify
+- [ ] Reactify
+- [ ] build on pre-commit
+- [ ] pan/zoom
