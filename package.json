@@ -4,6 +4,7 @@
   "description": "Ongoing experiment.",
   "main": "index.js",
   "scripts": {
+    "build": "echo 'yo!' > useless.txt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
