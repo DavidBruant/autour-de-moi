@@ -15,3 +15,4 @@ branches:
 # Need to configure env variables in Travis CI settings
 # https://travis-ci.org/DavidBruant/autour-de-moi/settings or equivalent:
 # * GH_TOKEN : personal access token with read/write access to the repo
+# * DEPLOY_TARGET_BRANCH : branch being pushed to after successful build
