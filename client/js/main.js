@@ -1,10 +1,9 @@
 import spatialisation from './spatialisation.js';
-import store from './store.js';
+import _store from './store.js';
 import {SVGNS, HEIGHT, WIDTH} from './constants.js';
 import makeGraphNode from './components/graphNode.js';
-import reducers from './reducers.js';
-
-spatialisation.graph = store.graph;
+//import makeEditPanel from './components/editPanel.js';
+import _reducers from './reducers.js';
 
 const container = document.querySelector('.graph-container');
 
@@ -35,7 +34,11 @@ const edgeToElement = new WeakMap();
 });*/
 
 let selectedNode;
-let editPanel;
+//let editPanel;
+
+const store = _store(render);
+spatialisation.graph = store.graph;
+
 
 function render(){
     for(const n of store.graph.nodes){
@@ -63,8 +66,10 @@ function render(){
             edgesG.append(line);
         }
 
-        const sourceNode = store.graph.nodes.find(n => (n === e.source));
-        const targetNode = store.graph.nodes.find(n => (n === e.target));
+        const nodes = store.graph.nodes;
+
+        const sourceNode = nodes.find(n => (n === e.source));
+        const targetNode = nodes.find(n => (n === e.target));
         
         line.setAttribute('x1', sourceNode.x);
         line.setAttribute('y1', sourceNode.y);
@@ -74,6 +79,10 @@ function render(){
 }
 
 render();
+
+
+
+const reducers = _reducers(render);
 
 svg.addEventListener('dblclick', e => {
     e.preventDefault();
@@ -162,10 +171,10 @@ svg.addEventListener('mousedown', e => {
             selectedNode = undefined;
         }
 
-        if(editPanel){
+        /*if(editPanel){
             editPanel.remove();
             editPanel = undefined;
-        }
+        }*/
     }
 });
 

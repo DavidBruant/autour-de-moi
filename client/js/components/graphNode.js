@@ -1,24 +1,27 @@
+import {SVGNS, NODE_RADIUS} from '../constants.js';
+
 export default function makeGraphNode(n){
     const group = document.createElementNS(SVGNS, "g");
     group.classList.add('node');
 
     group.addEventListener('mousedown', e => {
         e.preventDefault();
-        if(selectedNode){
+        /*if(selectedNode){
             selectedNode.classList.remove('selected');
         }
         
         group.classList.add('selected');
-        selectedNode = group;  
+        selectedNode = group;*/  
     });
 
     group.addEventListener('click', e => {
-        if(editPanel){
+        // temporarily disabled
+        /*if(editPanel){
             editPanel.remove();
         }
 
         editPanel = makeEditPanel(n);
-        document.body.append(editPanel);
+        document.body.append(editPanel);*/
     });
 
     const circle = document.createElementNS(SVGNS, "circle");

@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify client/js/main.js  -t rollupify -o client/js/browserify-bundle.js -d",
+    "watch": "watchify client/js/main.js  -t rollupify -o client/js/browserify-bundle.js -d -v",
+    "lint": "eslint client/js",
+    "fix": "eslint client/js --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,8 +22,9 @@
   "homepage": "https://github.com/DavidBruant/autour-de-moi",
   "dependencies": {
     "browserify": "^13.1.1",
-    "d3": "^4.4.0",
-    "gremlin-client": "^0.3.1",
+    "d3-color": "^1.0.2",
+    "d3-force": "^1.0.4",
+    "event-emitter": "^0.3.4",
     "preact": "^7.1.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",

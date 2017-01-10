@@ -120,7 +120,7 @@ rules:
   no-label-var: error
   no-labels: error
   no-lone-blocks: error
-  no-lonely-if: error
+  no-lonely-if: warn
   no-loop-func: error
   no-magic-numbers: 'off'
   no-mixed-operators: 'off'
@@ -168,7 +168,7 @@ rules:
   no-unneeded-ternary: error
   no-unsafe-negation: error
   no-unused-expressions: error
-  no-use-before-define: error
+  no-use-before-define: warn
   no-useless-call: error
   no-useless-computed-key: error
   no-useless-concat: error

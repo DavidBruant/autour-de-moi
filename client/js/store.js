@@ -1,23 +1,26 @@
 import remember from './remember.js' 
+import spac from './spatialisation.js';
 
 let graph = {
     nodes: [],
     edges: []
 }
 
-remember('autour-de-moi-graph')
-.then(g => {
-    if(g){
-        graph = g;
-        nodeId = idGenerator(Math.max(...store.graph.nodes.map(n => n.index)) + 1);
-        edgeId = idGenerator(Math.max(...store.graph.edges.map(n => n.index)) + 1);
+const storedGraphP = remember('autour-de-moi-graph')
 
-        render();
-    }
-});
+export default function(render){
+    storedGraphP.then(g => {
+        if(g){
+            graph = g;
+            //nodeId = idGenerator(Math.max(...store.graph.nodes.map(n => n.index)) + 1);
+            //edgeId = idGenerator(Math.max(...store.graph.edges.map(n => n.index)) + 1);
+            spac.graph = graph;
 
+            render();
+        }
+    });
 
-export default {
-    get graph(){ return graph }
-};
-
+    return {
+        get graph(){ return graph }
+    };
+}

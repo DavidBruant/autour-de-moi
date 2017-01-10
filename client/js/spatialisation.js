@@ -1,5 +1,6 @@
 //import ee from 'event-emitter';
 import d3 from 'd3-force';
+import ee from 'event-emitter';
 
 let graph;
 let simulation;

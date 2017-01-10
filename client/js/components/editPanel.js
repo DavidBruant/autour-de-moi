@@ -50,7 +50,7 @@ function makeColorPicker(selectedColor, onColorChange){
 }
 
 
-export function makeEditPanel(n){
+export function makeEditPanel(n, reducers){
     const container = document.createElement('div');
     container.classList.add('edit-panel');
 
